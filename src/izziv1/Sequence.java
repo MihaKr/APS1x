@@ -1,3 +1,5 @@
+package izziv1;
+
 interface Sequence<T> extends Collection {
     static final String ERR_MSG_INDEX = "Wrong index in sequence.";
 

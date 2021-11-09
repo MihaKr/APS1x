@@ -1,3 +1,5 @@
+package izziv1;
+
 class ArrayDeque<T> implements Deque<T>, Stack<T>, Sequence<T> {
     private static final int DEFAULT_CAPACITY = 64;
     private T[] a;

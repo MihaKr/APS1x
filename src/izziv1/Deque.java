@@ -1,3 +1,5 @@
+package izziv1;
+
 interface Deque<T> extends Collection {
     T front() throws CollectionException;
     T back() throws CollectionException;
