@@ -2,9 +2,9 @@ package izziv1;
 
 public class izziv1 {
     public static void main(String[] args) throws CollectionException {
-        Stack<String> s = new ArrayDeque<>();
-        Deque<String> d = new ArrayDeque<>();
-        Sequence<String> z = new ArrayDeque<>();
+        Stack<String> s = new ArrayDeque<String>();
+        Deque<String> d = new ArrayDeque<String>();
+        Sequence<String> z = new ArrayDeque<String>();
 
         s.push("ABC"); s.push("DEF"); s.push("GHI");
         System.out.print("izziv1.Stack: ");
