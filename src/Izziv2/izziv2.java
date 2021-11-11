@@ -1,5 +1,7 @@
 package Izziv2;
 
+import java.util.Random;
+
 public class izziv2 {
     static int[] generateTable(int n) {
         int[] a = new int[n];
@@ -36,14 +38,49 @@ public class izziv2 {
         return -1;
     }
 
-    long timeLinear(int n) {
-        return 0;
+    static long timeLinear(int n) {
+        int [] x = generateTable(n);
+        long startTime = System.nanoTime();
+        Random rand = new Random();
 
+
+        for (int i = 0; i < 1000; i++) {
+            int stevilo = rand.nextInt(n);
+            int y = findLinear(x, stevilo);
+        }
+
+        long executionTime = System.nanoTime() - startTime;
+        long povp = executionTime/1000;
+        return povp;
+    }
+
+    static long timeBinary(int n) {
+        int [] x = generateTable(n);
+        long startTime = System.nanoTime();
+        Random rand = new Random();
+
+
+        for (int i = 0; i < 1000; i++) {
+            int stevilo = rand.nextInt(n);
+            int y = findBinary(x,0,n, stevilo);
+        }
+
+        long executionTime = System.nanoTime() - startTime;
+        long povp = executionTime/1000;
+        return povp;
     }
 
     public static void main(String[] args) {
-        int [] x = generateTable(1000000);
-        System.out.println(findLinear(x, 5000));
-        System.out.println(findBinary(x, 0,1000000,5000));
+        int z = 100000;
+        System.out.println("   n       |     linearno  |   dvojisko  |");
+        System.out.println("---------+--------------+------------------");
+        while (z <= 1000000) {
+            long prvi = timeLinear(z);
+            long drugi = timeBinary(z);
+            System.out.printf("%10d | %13d | %10d\n", z, prvi, drugi);
+
+            z+=10000;
         }
+
     }
+}
