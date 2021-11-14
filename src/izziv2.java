@@ -1,5 +1,3 @@
-package Izziv2;
-
 import java.util.Random;
 
 public class izziv2 {
@@ -71,16 +69,26 @@ public class izziv2 {
     }
 
     public static void main(String[] args) {
+        StdDraw.setPenRadius(0.015);
         int z = 100000;
         System.out.println("   n       |     linearno  |   dvojisko  |");
         System.out.println("---------+--------------+------------------");
+        int i = 1;
+        StdDraw.setPenColor(StdDraw.BLUE);
+
         while (z <= 1000000) {
+            double stevec = i/91.0;
+            StdDraw.setPenColor(StdDraw.BLUE);
             long prvi = timeLinear(z);
+            double prvix = prvi/1000000.0;
+            StdDraw.point(stevec, prvix);
             long drugi = timeBinary(z);
+            double drugix = drugi/1000000.0;
+            StdDraw.setPenColor(StdDraw.MAGENTA);
+            StdDraw.point(stevec, drugix);
             System.out.printf("%10d | %13d | %10d\n", z, prvi, drugi);
-
             z+=10000;
+            i++;
         }
-
     }
 }
