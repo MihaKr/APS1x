@@ -1,5 +1,3 @@
-import java.util.Random;
-
 public class izziv2 {
     static int[] generateTable(int n) {
         int[] a = new int[n];
@@ -39,11 +37,10 @@ public class izziv2 {
     static long timeLinear(int n) {
         int [] x = generateTable(n);
         long startTime = System.nanoTime();
-        Random rand = new Random();
 
 
         for (int i = 0; i < 1000; i++) {
-            int stevilo = rand.nextInt(n);
+            int stevilo = (int)(Math.random() * n + 1);
             int y = findLinear(x, stevilo);
         }
 
@@ -55,11 +52,10 @@ public class izziv2 {
     static long timeBinary(int n) {
         int [] x = generateTable(n);
         long startTime = System.nanoTime();
-        Random rand = new Random();
-
 
         for (int i = 0; i < 1000; i++) {
-            int stevilo = rand.nextInt(n);
+            int stevilo = (int)(Math.random() * n + 1);
+
             int y = findBinary(x,0,n, stevilo);
         }
 
