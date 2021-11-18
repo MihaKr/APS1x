@@ -159,7 +159,4 @@ class ArrayDeque<T> implements Deque<T>, Stack<T>, Sequence<T> {
 
         return sb.toString();
     }
-
-
-    // Tukaj napiši svojo kodo.
 }

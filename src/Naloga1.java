@@ -1,6 +1,5 @@
 import java.util.Scanner;
 
-
 interface Collection {
     String ERR_MSG_EMPTY = "izziv1.Collection is empty.";
     String ERR_MSG_FULL = "izziv1.Collection is full.";
@@ -24,7 +23,6 @@ interface Sequence<T> extends Collection {
 
     void add(T x) throws CollectionException;
 }
-
 
 interface Deque<T> extends Collection {
     T front() throws CollectionException;
@@ -208,23 +206,137 @@ class ArrayDeque<T> implements Deque<T>, Stack<T>, Sequence<T> {
 }
 
 @SuppressWarnings("unchecked")
-class FrameWork {
+class Calc {
     private Sequence<Stack<String>> sequence;
     private Scanner in;
     private boolean check;
 
-    FrameWork(int num) throws CollectionException {
-        sequence = new ArrayDeque<Stack<String>>(num);
-        for (int i = 0; i < num; i++) {
+    Calc() throws CollectionException {
+        sequence = new ArrayDeque<Stack<String>>(42);
+        for (int i = 0; i < 42; i++) {
             sequence.add(new ArrayDeque<String>());
         }
     }
 
-    void input(String in) {
-
+    void drugScan(String vrstica) throws CollectionException {
+        in = new Scanner(vrstica);
+        check = false;
+        while(in.hasNext()) {
+            String niz = in.next();
+            operacije(niz);
+        }
     }
 
-    //1. SKLOP OPERACIJ
+    void operacije(String niz) throws CollectionException {
+        if ((niz.charAt(0) == '?' && check) || niz.charAt(0) != '?') {
+            if(niz.charAt(0) == '?') {
+                niz = niz.substring(1);
+            }
+            switch (niz) {
+                case "echo":
+                    echo();
+                    break;
+                case "pop":
+                    pop();
+                    break;
+                case "dup":
+                    dup();
+                    break;
+                case "dup2":
+                    dup2();
+                    break;
+                case "swap":
+                    swap();
+                    break;
+                case "char":
+                    charr();
+                    break;
+                case "even":
+                    even();
+                    break;
+                case "odd":
+                    odd();
+                    break;
+                case "!":
+                    fakt();
+                    break;
+                case "len":
+                    len();
+                    break;
+                case "<>":
+                    razlicen();
+                    break;
+                case "<":
+                    manjsi();
+                    break;
+                case "<=":
+                    manjsiE();
+                    break;
+                case "==":
+                    enak();
+                    break;
+                case ">":
+                    vecji();
+                    break;
+                case ">=":
+                    vecjiE();
+                    break;
+                case "+":
+                    plus();
+                    break;
+                case "-":
+                    minus();
+                    break;
+                case "*":
+                    krat();
+                    break;
+                case "/":
+                    deli();
+                    break;
+                case "%":
+                    mod();
+                    break;
+                case ".":
+                    dot();
+                    break;
+                case "rnd":
+                    rnd();
+                    break;
+                case "then":
+                    then();
+                    break;
+                case "else":
+                    elsee();
+                    break;
+                case "print":
+                    print();
+                    break;
+                case "clear":
+                    clear();
+                    break;
+                case "reverse":
+                    reverse();
+                    break;
+                case "run":
+                    run();
+                    break;
+                case "loop":
+                    loop();
+                    break;
+                case "fun":
+                    fun();
+                    break;
+                case "move":
+                    move();
+                    break;
+                default:
+                    add(niz);
+                    break;
+            }
+        }
+    }
+
+    //1. SKLOP OPERACIJ - OSNOVE
     void add(String niz) throws CollectionException {
         sequence.get(0).push(niz);
     }
@@ -246,22 +358,278 @@ class FrameWork {
     }
 
     void dup2() throws CollectionException {
+        String y = sequence.get(0).pop();
+        String x = sequence.get(0).pop();
+        for (int i = 0; i < 2; i++) {
+            sequence.get(0).push(x);
+            sequence.get(0).push(y);
+        }
     }
 
     void swap() throws CollectionException {
+        String y = sequence.get(0).pop();
+        String x = sequence.get(0).pop();
+        sequence.get(0).push(y);
+        sequence.get(0).push(x);
+    }
+
+    //2. SKLOP OPERACIJ - OSNOVE PT 2
+
+    void charr() throws CollectionException {
+        double x = Double.parseDouble(sequence.get(0).pop());
+        char ch = (char) x;
+        sequence.get(0).push(String.valueOf(ch));
+    }
+    void even() throws CollectionException {
+        int x = Math.abs(Integer.parseInt(sequence.get(0).pop()));
+        if(x % 2 == 0) {
+            sequence.get(0).push("1");
+        }
+        else {
+            sequence.get(0).push("0");
+        }
+    }
+
+    void odd() throws CollectionException {
+        int x = Math.abs(Integer.parseInt(sequence.get(0).pop()));
+        if(x % 2 == 1) {
+            sequence.get(0).push("1");
+        }
+        else {
+            sequence.get(0).push("0");
+        }
+    }
+
+    void fakt() throws CollectionException {
+        int x = Integer.parseInt(sequence.get(0).pop());
+        int sest = 1;
+
+        for (int i = 2; i <= x; i++) {
+            sest *= i;
+        }
+        sequence.get(0).push(Integer.toString(sest));
+    }
+
+    void len() throws CollectionException {
+        String x = sequence.get(0).pop();
+        sequence.get(0).push(Integer.toString(x.length()));
+    }
+
+    //3. SKLOP OPERACIJ - ALE
+    void razlicen() throws CollectionException {
+        int x = Integer.parseInt(sequence.get(0).pop());
+        int y = Integer.parseInt(sequence.get(0).pop());
+
+        sequence.get(0).push(x == y ? "0" : "1");
+    }
+
+    void manjsi() throws CollectionException {
+        int x = Integer.parseInt(sequence.get(0).pop());
+        int y = Integer.parseInt(sequence.get(0).pop());
+
+        sequence.get(0).push(y < x ? "1" : "0");
+    }
+
+    void manjsiE() throws CollectionException {
+        int x = Integer.parseInt(sequence.get(0).pop());
+        int y = Integer.parseInt(sequence.get(0).pop());
+
+        sequence.get(0).push(y <= x ? "1" : "0");
+    }
+
+    void enak() throws CollectionException {
+        int x = Integer.parseInt(sequence.get(0).pop());
+        int y = Integer.parseInt(sequence.get(0).pop());
+
+        sequence.get(0).push(x == y ? "1" : "0");
+    }
+
+    void vecji() throws CollectionException {
+        int x = Integer.parseInt(sequence.get(0).pop());
+        int y = Integer.parseInt(sequence.get(0).pop());
+
+        sequence.get(0).push(y > x ? "1" : "0");
+    }
+
+    void vecjiE() throws CollectionException {
+        int x = Integer.parseInt(sequence.get(0).pop());
+        int y = Integer.parseInt(sequence.get(0).pop());
+
+        sequence.get(0).push(y >= x ? "1" : "0");
+    }
+
+    void plus() throws CollectionException {
+        int x = Integer.parseInt(sequence.get(0).pop());
+        int y = Integer.parseInt(sequence.get(0).pop());
+
+        sequence.get(0).push(Integer.toString(x + y));
+    }
+
+    void minus() throws CollectionException {
+        int x = Integer.parseInt(sequence.get(0).pop());
+        int y = Integer.parseInt(sequence.get(0).pop());
+
+        sequence.get(0).push(Integer.toString(y - x));
     }
 
 
-    //2. SKLOP OPERACIJ
+    void krat() throws CollectionException {
+        int x = Integer.parseInt(sequence.get(0).pop());
+        int y = Integer.parseInt(sequence.get(0).pop());
 
-    void charr() throws CollectionException {
+        sequence.get(0).push(Integer.toString(x * y));
+    }
 
+    void deli() throws CollectionException {
+        int x = Integer.parseInt(sequence.get(0).pop());
+        int y = Integer.parseInt(sequence.get(0).pop());
+
+        sequence.get(0).push(Integer.toString(y / x));
+    }
+
+    void mod() throws CollectionException {
+        int x = Integer.parseInt(sequence.get(0).pop());
+        int y = Integer.parseInt(sequence.get(0).pop());
+        try {
+            sequence.get(0).push(Integer.toString(y % x));
+        } catch (ArithmeticException ignored) {}
+    }
+
+    void dot() throws CollectionException {
+        String x = sequence.get(0).pop();
+        String y = sequence.get(0).pop();
+
+        sequence.get(0).push((y + x));
+    }
+
+    void rnd() throws CollectionException {
+        int x = Integer.parseInt(sequence.get(0).pop());
+        int y = Integer.parseInt(sequence.get(0).pop());
+
+        int z = (int) (Math.random() * ((x - y)) + y);
+        sequence.get(0).push(Integer.toString(z));
+    }
+
+    //4. SKLOP - POGOJNE OPERACIJE
+
+    void then() throws CollectionException {
+        int x = Integer.parseInt(sequence.get(0).pop());
+        check = (x != 0);
+    }
+
+    void elsee() throws CollectionException {
+        check = !check;
+    }
+    //5. SKLOP - OPERACIJE NAD VSEMI
+
+    void print() throws CollectionException {
+        StringBuilder output = new StringBuilder();
+        Stack<String> zac = new ArrayDeque<String>();
+
+        int sklad = Integer.parseInt(sequence.get(0).pop());
+        while(!sequence.get(sklad).isEmpty()) {
+            zac.push(sequence.get(sklad).pop());
+        }
+
+        while(!zac.isEmpty()) {
+            output.append(zac.top());
+            output.append(" ");
+            sequence.get(sklad).push(zac.pop());
+        }
+
+        System.out.println(output.toString());
+    }
+
+    void clear() throws CollectionException {
+        int sklad = Integer.parseInt(sequence.get(0).pop());
+
+        while(!sequence.get(sklad).isEmpty()) {
+            String x = sequence.get(sklad).pop();
+        }
+    }
+
+    void reverse() throws CollectionException {
+        int sklad = Integer.parseInt(sequence.get(0).pop());
+        Stack<String> nov = new ArrayDeque<String>();
+        Stack<String> novnov = new ArrayDeque<String>();
+
+        while(!sequence.get(sklad).isEmpty()) {
+            nov.push(sequence.get(sklad).pop());
+        }
+
+        while(!nov.isEmpty()) {
+            novnov.push(nov.pop());
+        }
+
+        while(!novnov.isEmpty()) {
+            sequence.get(sklad).push(novnov.pop());
+        }
+    }
+
+    void run() throws CollectionException {
+        int sklad = Integer.parseInt(sequence.get(0).pop());
+        Stack<String> nov = new ArrayDeque<String>();
+
+        while(!sequence.get(sklad).isEmpty()) {
+            nov.push(sequence.get(sklad).pop());
+        }
+
+        while (!nov.isEmpty()) {
+            String x = nov.pop();
+            operacije(x);
+            sequence.get(sklad).push(x);
+        }
+    }
+
+    void loop() throws CollectionException {
+        int sklad = Integer.parseInt(sequence.get(0).pop());
+        int stevilo = Integer.parseInt(sequence.get(0).pop());
+        Stack<String> nov = new ArrayDeque<String>();
+            for (int i = 0; i < stevilo; i++) {
+                check = false;
+
+                while (!sequence.get(sklad).isEmpty()) {
+                    nov.push(sequence.get(sklad).pop());
+                }
+
+                while (!nov.isEmpty()) {
+                    String x = nov.pop();
+                    operacije(x);
+                    sequence.get(sklad).push(x);
+                }
+            }
+    }
+
+    void fun() throws CollectionException {
+        int sklad = Integer.parseInt(sequence.get(0).pop());
+        int stevilo = Integer.parseInt(sequence.get(0).pop());
+
+        for (int i = 0; i < stevilo; i++) {
+            sequence.get(sklad).push(in.next());
+        }
+    }
+
+    void move() throws CollectionException {
+        int sklad = Integer.parseInt(sequence.get(0).pop());
+        int stevilo = Integer.parseInt(sequence.get(0).pop());
+
+        for (int i = 0; i < stevilo; i++) {
+            sequence.get(sklad).push(sequence.get(0).pop());
+        }
     }
 }
 
 public class Naloga1 {
     public static void main(String[] args) throws CollectionException{
-        FrameWork nov = new FrameWork(42);
+        Calc nov = new Calc();
+        Scanner sc_v = new Scanner(System.in);
+        while(sc_v.hasNextLine()) {
+            String vrstica = sc_v.nextLine();
+            nov.drugScan(vrstica);
+            for (int i = 0; i < 42; i++) {
+                nov.add(Integer.toString(i));
+                nov.clear();
+            }
+        }
     }
-
 }
