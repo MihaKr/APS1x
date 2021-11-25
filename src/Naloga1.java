@@ -219,8 +219,8 @@ class Calc {
     }
 
     void drugScan(String vrstica) throws CollectionException {
-        in = new Scanner(vrstica);
         check = false;
+        in = new Scanner(vrstica);
         while(in.hasNext()) {
             String niz = in.next();
             operacije(niz);
@@ -472,7 +472,6 @@ class Calc {
         sequence.get(0).push(Integer.toString(y - x));
     }
 
-
     void krat() throws CollectionException {
         int x = Integer.parseInt(sequence.get(0).pop());
         int y = Integer.parseInt(sequence.get(0).pop());
@@ -506,7 +505,8 @@ class Calc {
         int x = Integer.parseInt(sequence.get(0).pop());
         int y = Integer.parseInt(sequence.get(0).pop());
 
-        int z = (int) (Math.random() * ((x - y)) + y);
+        int z = y + (int) (Math.random() * ((x - y) + 1));
+
         sequence.get(0).push(Integer.toString(z));
     }
 
@@ -576,8 +576,8 @@ class Calc {
 
         while (!nov.isEmpty()) {
             String x = nov.pop();
-            operacije(x);
             sequence.get(sklad).push(x);
+            operacije(x);
         }
     }
 
@@ -585,19 +585,18 @@ class Calc {
         int sklad = Integer.parseInt(sequence.get(0).pop());
         int stevilo = Integer.parseInt(sequence.get(0).pop());
         Stack<String> nov = new ArrayDeque<String>();
-            for (int i = 0; i < stevilo; i++) {
-                check = false;
+        for (int i = 0; i < stevilo; i++) {
 
-                while (!sequence.get(sklad).isEmpty()) {
-                    nov.push(sequence.get(sklad).pop());
-                }
-
-                while (!nov.isEmpty()) {
-                    String x = nov.pop();
-                    operacije(x);
-                    sequence.get(sklad).push(x);
-                }
+            while (!sequence.get(sklad).isEmpty()) {
+                nov.push(sequence.get(sklad).pop());
             }
+
+            while (!nov.isEmpty()) {
+                String x = nov.pop();
+                operacije(x);
+                sequence.get(sklad).push(x);
+            }
+        }
     }
 
     void fun() throws CollectionException {
