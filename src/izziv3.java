@@ -5,7 +5,7 @@ public class izziv3 {
         StdDraw.setCanvasSize(1500, 800);
         StdDraw.setXscale(-1, size);
         StdDraw.setYscale((int) (Math.log(size + 1) / Math.log(2)) + 1, -1);
-        ctd.drawInorder(0);
+        ctd.drawLevelOrder();
     }
 }
 
@@ -34,7 +34,7 @@ class CompleteBinaryTreeDrawer {
     }
 
     void drawNode(int i) {
-        StdDraw.filledCircle(this.x[i], this.y[i], 0.15);
+        StdDraw.filledCircle(this.x[i], this.y[i], 0.20);
     }
 
     void drawEdgeToParent(int i) {
@@ -61,5 +61,27 @@ class CompleteBinaryTreeDrawer {
         if (2 * i + 2 < size) {
             drawInorder(2 * i + 2);
         }
+    }
+
+    void drawPreorder(int i) {
+        drawNode(i);
+        drawEdgeToParent(i);
+        if (2 * i + 1 < size) {
+            drawInorder(2 * i + 1);
+        }
+        if (2 * i + 2 < size) {
+            drawInorder(2 * i + 2);
+        }
+    }
+
+    void drawPostorder(int i) {
+        if (2 * i + 1 < size) {
+            drawInorder(2 * i + 1);
+        }
+        if (2 * i + 2 < size) {
+            drawInorder(2 * i + 2);
+        }
+        drawNode(i);
+        drawEdgeToParent(i);
     }
 }
