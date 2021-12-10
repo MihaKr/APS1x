@@ -1,1 +1,2 @@
-else 17 ?6 ?5 8 ?25 else else ?* 0 print
+bla bla bla
+42 17 27 51 39

@@ -1,8 +1,10 @@
+package n;
+
 import java.util.Scanner;
 
 interface Collection {
-    String ERR_MSG_EMPTY = "izziv1.Collection is empty.";
-    String ERR_MSG_FULL = "izziv1.Collection is full.";
+    String ERR_MSG_EMPTY = "izziv1.n.Collection is empty.";
+    String ERR_MSG_FULL = "izziv1.n.Collection is full.";
 
     boolean isEmpty();
     boolean isFull();
