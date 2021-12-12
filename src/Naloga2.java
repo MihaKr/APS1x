@@ -25,7 +25,7 @@ class sorter {
         mode = ops[0];
         type = ops[1];
 
-        insertSort();
+        selectSort();
     }
 
     void insertSort() {
@@ -34,13 +34,12 @@ class sorter {
             int key = this.field[i];
             int j = i - 1;
 
-            if(this.dir.equals("up")) {
+            if (this.dir.equals("up")) {
                 while (j >= 0 && this.field[j] > key) {
                     this.field[j + 1] = this.field[j];
                     j = j - 1;
                 }
-            }
-            else {
+            } else {
                 while (j >= 0 && this.field[j] < key) {
                     this.field[j + 1] = this.field[j];
                     j = j - 1;
@@ -52,11 +51,52 @@ class sorter {
 
             StringBuilder trace = new StringBuilder();
             for (int k = 0; k < this.field.length; k++) {
-                trace.append(this.field[k]+ " ");
-                if((div == k) && (i > 0)) {
+                trace.append(this.field[k] + " ");
+                if ((div == k) && (i > 0)) {
                     trace.append("| ");
                 }
             }
+            System.out.println(trace.toString());
+        }
+    }
+
+    void selectSort() {
+        int div = 0;
+
+        StringBuilder zac = new StringBuilder();
+
+        for (int k = 0; k < this.field.length; k++) {
+            zac.append(this.field[k] + " ");
+        }
+        System.out.println(zac.toString());
+
+        for (int i = 0; i < this.field.length - 1; i++) {
+            int min = i;
+            for (int j = i + 1; j < this.field.length; j++) {
+                if (this.dir.equals("up")) {
+                    if (this.field[j] < this.field[min]) {
+                        min = j;
+                    }
+                }
+                else {
+                    if (this.field[j] > this.field[min]) {
+                        min = j;
+                    }
+                }
+            }
+
+            int temp = this.field[min];
+            this.field[min] = this.field[i];
+            this.field[i] = temp;
+
+            StringBuilder trace = new StringBuilder();
+            for (int k = 0; k < this.field.length; k++) {
+                trace.append(this.field[k] + " ");
+                if (div == k) {
+                    trace.append("| ");
+                }
+            }
+            div++;
             System.out.println(trace.toString());
         }
     }
