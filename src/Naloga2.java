@@ -29,7 +29,7 @@ class sorter {
     }
 
     void insertSort() {
-        int ops = 0;
+        int div = -1;
         for (int i = 0; i < this.field.length; i++) {
             int key = this.field[i];
             int j = i - 1;
@@ -47,7 +47,17 @@ class sorter {
                 }
             }
             this.field[j + 1] = key;
+
+            div++;
+
+            StringBuilder trace = new StringBuilder();
+            for (int k = 0; k < this.field.length; k++) {
+                trace.append(this.field[k]+ " ");
+                if((div == k) && (i > 0)) {
+                    trace.append("| ");
+                }
+            }
+            System.out.println(trace.toString());
         }
-        System.out.println(12);
     }
 }
