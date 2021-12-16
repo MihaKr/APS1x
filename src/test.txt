@@ -1,2 +1,2 @@
-trace select down
+count insert up
 42 17 27 51 39
