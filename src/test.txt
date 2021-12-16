@@ -1,2 +1,2 @@
-count insert up
+count select down
 42 17 27 51 39

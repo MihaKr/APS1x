@@ -42,6 +42,9 @@ class sorter {
                 break;
             case "select":
                 selectSort();
+                selectSort();
+                this.dir = "up";
+                selectSort();
                 break;
             case "bubble":
                 bubbleSort();
@@ -100,6 +103,8 @@ class sorter {
     }
 
     void selectSort() {
+        this.moves = 0;
+        this.compares = 0;
         int div = 0;
 
         StringBuilder zac = new StringBuilder();
@@ -109,24 +114,31 @@ class sorter {
         }
         System.out.println(zac.toString());
 
-        for (int i = 0; i < this.field.length - 1; i++) {
+        for (int i = 0; i <= this.field.length - 2; i++) {
             int min = i;
-            for (int j = i + 1; j < this.field.length; j++) {
+            for (int j = i + 1; j <= this.field.length-1; j++) {
                 if (this.dir.equals("up")) {
+                    this.compares++;
                     if (this.field[j] < this.field[min]) {
                         min = j;
                     }
                 }
                 else {
+                    this.compares++;
                     if (this.field[j] > this.field[min]) {
                         min = j;
                     }
                 }
             }
+            swap(i,min);
+
 
             insertTrace(div,i);
             div++;
         }
+        System.out.println(this.moves);
+        System.out.println(this.compares);
+
     }
 
     void bubbleSort() {
@@ -278,6 +290,13 @@ class sorter {
             }
         }
         return merged;
+    }
+
+    private void swap(int a, int b) {
+        int tmp = this.field[a];
+        this.field[a] = this.field[b];
+        this.field[b] = tmp;
+        this.moves += 3;
     }
 
     void insertTrace(int div, int i) {
