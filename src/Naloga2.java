@@ -17,6 +17,8 @@ class sorter {
     private String mode;
     private String dir;
     private String type;
+    private int compares;
+    private int moves;
 
     public sorter(String[] ops, String[] num) {
         this.field = new int[num.length];
@@ -35,6 +37,8 @@ class sorter {
             case "insert":
                 insertSort();
                 insertSort();
+                this.dir = "down";
+                insertSort();
                 break;
             case "select":
                 selectSort();
@@ -52,8 +56,9 @@ class sorter {
     }
 
     void insertSort() {
-        int comp = 0;
-        int move = 0;
+        this.moves = 0;
+        this.compares = 0;
+
         int div = 1;
 
         for (int k = 0; k < this.field.length; k++) {
@@ -63,39 +68,35 @@ class sorter {
 
         for (int i = 1; i <= this.field.length-1; i++) {
             int key = this.field[i];
-            move++;
+            this.moves++;
 
             int j = i;
 
-            comp++;
             if (this.dir.equals("up")) {
-                comp++;
+                this.compares++;
                 while (j > 0 && this.field[j-1] > key) {
                     this.field[j] = this.field[j-1];
-                    move++;
-
+                    this.moves++;
                     j = j - 1;
                 }
+
             } else {
-                comp++;
                 while (j > 0 && this.field[j-1] < key) {
+                    this.compares++;
                     this.field[j] = this.field[j-1];
-                    move++;
+                    this.moves++;
                     j = j - 1;
                 }
             }
-            if (this.field[j] != key) {
-                this.field[j] = key;
-                move++;
-            }
 
+            this.field[j] = key;
+            this.moves++;
             insertTrace(div, i);
 
             div++;
         }
-        System.out.println(move);
-        System.out.println(comp);
-
+        System.out.println(this.moves);
+        System.out.println(this.compares);
     }
 
     void selectSort() {
