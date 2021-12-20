@@ -1,6 +1,7 @@
-import javax.crypto.spec.PSource;
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.util.Scanner;
+
+//abandon hope all ye who enter here (za tiste ki želite razumet kodo)
+
 
 public class Naloga2 {
     public static void main(String[] args) {
@@ -15,59 +16,115 @@ public class Naloga2 {
 class sorter {
     private int field[];
     private String mode;
-    private String dir;
+    private int dir;
     private String type;
     private int compares;
     private int moves;
+    private String counting;
 
     public sorter(String[] ops, String[] num) {
         this.field = new int[num.length];
         for (int i = 0; i < num.length; i++) {
             this.field[i] = Integer.parseInt(num[i]);
         }
-        dir = ops[2];
+        if(ops[2].equals("up")) {
+            dir = 1;
+        }
+        else {
+            dir = -1;
+        }
         mode = ops[0];
         type = ops[1];
 
         select(type);
     }
 
+    public boolean comparable(int[] array, int x, int y) {
+        this.compares++;
+        return (dir * array[x]) > (y * dir) ;
+    }
+
     void select(String type) {
         switch (type) {
             case "insert":
+                this.counting = "";
                 insertSort();
-                insertSort();
-                this.dir = "down";
-                insertSort();
+                if(mode.equals("count")) {
+                    insertSort();
+                    this.dir *= -1;
+                    insertSort();
+                    this.counting =  this.counting.substring(0, this.counting.length() - 2);
+                    System.out.println(this.counting);
+                }
                 break;
             case "select":
+                this.counting = "";
                 selectSort();
-                selectSort();
-                this.dir = "up";
-                selectSort();
+                if(mode.equals("count")) {
+                    selectSort();
+                    this.dir *= -1;
+                    selectSort();
+                    this.counting = this.counting.substring(0, this.counting.length() - 2);
+                    System.out.println(this.counting);
+                }
                 break;
             case "bubble":
                 bubbleSort();
                 break;
             case "merge":
-                for (int i = 0; i < this.field.length; i++) {
-                    System.out.print(this.field[i] + " ");
+                StringBuilder mid = new StringBuilder();
+                this.moves = 0;
+                this.compares = 0;
+                this.counting = "";
+
+                if(this.mode.equals("trace")) {
+                    for (int i = 0; i < this.field.length; i++) {
+                        System.out.print(this.field[i] + " ");
+                    }
+                    System.out.println();
                 }
-                System.out.println();
-                mergeSort(this.field);
+                this.field = mergeSort(this.field);
+                mid.append(this.moves + " ");
+                mid.append(this.compares + " ");
+                mid.append("| ");
+
+                if(mode.equals("count")) {
+                    this.moves = 0;
+                    this.compares = 0;
+                    this.field = mergeSort(this.field);
+                    mid.append(this.moves + " ");
+                    mid.append(this.compares + " ");
+                    mid.append("| ");
+
+                    this.moves = 0;
+                    this.compares = 0;
+                    this.dir *= -1;
+                    this.field = mergeSort(this.field);
+                    mid.append(this.moves + " ");
+                    mid.append(this.compares + " ");
+                    System.out.println(mid.toString());
+                }
+                break;
+
+            case "heap":
+                heapSort();
+                break;
+            }
         }
-    }
 
     void insertSort() {
+        StringBuilder mid = new StringBuilder();
         this.moves = 0;
         this.compares = 0;
 
         int div = 1;
 
-        for (int k = 0; k < this.field.length; k++) {
-            System.out.print(this.field[k] + " ");
+        if(mode.equals("trace")) {
+            for (int k = 0; k < this.field.length; k++) {
+                System.out.print(this.field[k] + " ");
+            }
+            System.out.println();
         }
-        System.out.println();
 
         for (int i = 1; i <= this.field.length-1; i++) {
             int key = this.field[i];
@@ -75,125 +132,128 @@ class sorter {
 
             int j = i;
 
-            if (this.dir.equals("up")) {
-                this.compares++;
-                while (j > 0 && this.field[j-1] > key) {
-                    this.field[j] = this.field[j-1];
-                    this.moves++;
-                    j = j - 1;
-                }
-
-            } else {
-                while (j > 0 && this.field[j-1] < key) {
-                    this.compares++;
-                    this.field[j] = this.field[j-1];
-                    this.moves++;
-                    j = j - 1;
-                }
+            while (j > 0 && comparable(this.field, j-1, key)) {
+                this.field[j] = this.field[j-1];
+                this.moves++;
+                j = j - 1;
             }
 
             this.field[j] = key;
             this.moves++;
-            insertTrace(div, i);
 
+            if(mode.equals("trace")) {
+                insertTrace(div);
+            }
             div++;
         }
-        System.out.println(this.moves);
-        System.out.println(this.compares);
+
+        if(mode.equals("count")) {
+            mid.append(this.moves + " ");
+            mid.append(this.compares + " ");
+            mid.append("| ");
+            this.counting += mid.toString();
+        }
     }
 
     void selectSort() {
+        StringBuilder mid = new StringBuilder();
         this.moves = 0;
         this.compares = 0;
         int div = 0;
 
-        StringBuilder zac = new StringBuilder();
+        if(mode.equals("trace")) {
+            StringBuilder zac = new StringBuilder();
 
-        for (int k = 0; k < this.field.length; k++) {
-            zac.append(this.field[k] + " ");
+            for (int k = 0; k < this.field.length; k++) {
+                zac.append(this.field[k] + " ");
+            }
+            System.out.println(zac);
         }
-        System.out.println(zac.toString());
 
         for (int i = 0; i <= this.field.length - 2; i++) {
             int min = i;
             for (int j = i + 1; j <= this.field.length-1; j++) {
-                if (this.dir.equals("up")) {
-                    this.compares++;
-                    if (this.field[j] < this.field[min]) {
-                        min = j;
-                    }
-                }
-                else {
-                    this.compares++;
-                    if (this.field[j] > this.field[min]) {
-                        min = j;
-                    }
+                if(!comparable(this.field, j, this.field[min])){
+                    min = j;
                 }
             }
+
             swap(i,min);
 
-
-            insertTrace(div,i);
+            if(mode.equals("trace")) {
+                insertTrace(div);
+            }
             div++;
         }
-        System.out.println(this.moves);
-        System.out.println(this.compares);
 
+        if(mode.equals("count")) {
+            mid.append(this.moves + " ");
+            mid.append(this.compares + " ");
+            mid.append("| ");
+            this.counting += mid.toString();
+        }
     }
 
     void bubbleSort() {
-        int i, j, temp;
-        boolean swapped;
-        int div = 0;
+        int m = 0;
+        int div = 1;
+        for (int i = 0; i < this.field.length; i++) {
+            System.out.print(this.field[i] + " ");
+        }
+        System.out.println();
 
-        for (i = 0; i < this.field.length - 1; i++) {
-            swapped = false;
-
-            for (j = 0; j < this.field.length - i - 1; j++) {
-                if (this.dir.equals("up")) {
-                    if (this.field[j] > this.field[j + 1]) {
-                        temp = this.field[j];
-                        this.field[j] = this.field[j + 1];
-                        this.field[j + 1] = temp;
-                        swapped = true;
-                    }
-                }
-                else {
-                    if (this.field[j] < this.field[j + 1]) {
-                        temp = this.field[j];
-                        this.field[j] = this.field[j + 1];
-                        this.field[j + 1] = temp;
-                        swapped = true;
-                    }
+        for (int i = 0; i < this.field.length-1; i = m) {
+            m = this.field.length-1;
+            for (int j = this.field.length-2; j >= i; j--) {
+                if(comparable(this.field, j, this.field[j+1])) {
+                    swap(j,j+1);
+                    m = j;
                 }
             }
 
-            StringBuilder trace = new StringBuilder();
-            for (int k = 0; k < this.field.length; k++) {
-                trace.append(this.field[k] + " ");
-                if (div == k) {
-                    trace.append("| ");
-                }
-            }
-            div++;
-            System.out.println(trace.toString());
-
-            if (swapped == false) {
-                break;
-            }
+            div += bubbleDiv(this.field);
+            insertTrace(div);
         }
         System.out.println(12);
     }
 
     void heapSort() {
-        for (int i = this.field.length / 2 - 1; i >= 0; i--) {
-            siftDown(this.field, i);
-            System.out.println("NOT DONE");
+        for (int i = 0; i < this.field.length; i++) {
+            System.out.print(this.field[i] + " ");
         }
+
+        System.out.println();
+
+        for (int i = this.field.length / 2 - 1; i >= 0; i--) {
+            siftDown(this.field, this.field.length, i);
+        }
+        int last = this.field.length - 1;
+
+        while (last > 0) {
+            insertTrace(last);
+            swap(0,last);
+            siftDown(this.field, last--, 0);
+        }
+        insertTrace(last);
     }
 
-    void siftDown(int[] field, int i) {
+    void siftDown(int[] field, int size, int i) {
+        int max = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
 
+        if (left < size && comparable(this.field, left, field[max])) {
+            max = left;
+        }
+
+        if (right < size && comparable(this.field, right, field[max])) {
+            max = right;
+        }
+
+        if (max != i) {
+            swap(i, max);
+            siftDown(field, size, i);
+        }
     }
 
     int[] mergeSort(int[] array) {
@@ -218,28 +278,33 @@ class sorter {
             lenFix = 1;
         }
 
-
         for (int i = 0; i < leftV.length; i++) {
             leftV[i] = array[i];
+            this.moves++;
+
         }
 
         for (int i = 0; i < rightV.length  ; i++) {
             rightV[i] = array[i+middle+lenFix];
+            this.moves++;
+
         }
 
-        mergeTrace(leftV, rightV);
+        if(mode.equals("trace")) {
+            mergeTrace(leftV, rightV);
+        }
 
         int[] left = mergeSort(leftV);
         int[] right = mergeSort(rightV);
 
         int [] merged = merge(left,right);
 
-        for (int i = 0; i < merged.length; i++) {
-            System.out.print(merged[i] + " ");
+        if(mode.equals("trace")) {
+            for (int i = 0; i < merged.length; i++) {
+                System.out.print(merged[i] + " ");
+            }
+            System.out.println();
         }
-
-        System.out.println();
-
         return merged;
     }
 
@@ -253,27 +318,18 @@ class sorter {
         int[] merged = new int[(leftSize + rightSize)];
 
         while ((rightP < rightSize) && (leftP < leftSize)) {
-            if(this.dir.equals("up")) {
-                if (right[rightP] < left[leftP]) {
-                    merged[mergedP] = right[rightP];
-                    rightP++;
-                    mergedP++;
-                } else {
-                    merged[mergedP] = left[leftP];
-                    leftP++;
-                    mergedP++;
-                }
-            }
-            else {
-                if (right[rightP] > left[leftP]) {
-                    merged[mergedP] = right[rightP];
-                    rightP++;
-                    mergedP++;
-                } else {
-                    merged[mergedP] = left[leftP];
-                    leftP++;
-                    mergedP++;
-                }
+            this.compares++;
+            if (this.dir * right[rightP] < left[leftP] * this.dir) {
+                merged[mergedP] = right[rightP];
+                rightP++;
+                mergedP++;
+                this.moves++;
+
+            } else {
+                merged[mergedP] = left[leftP];
+                leftP++;
+                mergedP++;
+                this.moves++;
             }
         }
 
@@ -282,14 +338,35 @@ class sorter {
                 merged[mergedP] = right[rightP];
                 rightP++;
                 mergedP++;
+                this.moves++;
             }
             if (leftP < leftSize) {
                 merged[mergedP] = left[leftP];
                 leftP++;
                 mergedP++;
+                this.moves++;
             }
         }
         return merged;
+    }
+
+    void parition() {
+
+    }
+
+    int bubbleDiv(int [] arr) {
+        int div = 0;
+        for (int i = 0; i < arr.length-1; i++) {
+            for (int j = 0; j < arr.length-2; j++) {
+                if(!comparable(arr, i, arr[j+1])) {
+                    return div;
+                }
+                else {
+                    div++;
+                }
+            }
+        }
+        return div;
     }
 
     private void swap(int a, int b) {
@@ -299,7 +376,7 @@ class sorter {
         this.moves += 3;
     }
 
-    void insertTrace(int div, int i) {
+    void insertTrace(int div) {
         StringBuilder trace = new StringBuilder();
         for (int k = 0; k < this.field.length; k++) {
             trace.append(this.field[k] + " ");
@@ -323,8 +400,6 @@ class sorter {
             traced.append(right[i]);
             traced.append(" ");
         }
-
         System.out.println(traced.toString().trim());
-
     }
 }

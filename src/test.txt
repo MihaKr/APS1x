@@ -1,2 +1,2 @@
-count select down
-42 17 27 51 39
+trace bubble up
+42 17 27 51 39 11 90 42
