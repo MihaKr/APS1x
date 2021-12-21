@@ -109,8 +109,13 @@ class sorter {
             case "heap":
                 heapSort();
                 break;
-            }
+
+            case "quick":
+                quicksort(0, this.field.length - 1);
+                System.out.println(12);
+                break;
         }
+    }
 
     void insertSort() {
         StringBuilder mid = new StringBuilder();
@@ -196,7 +201,7 @@ class sorter {
 
     void bubbleSort() {
         int m = 0;
-        int div = 1;
+        int div = -1;
         for (int i = 0; i < this.field.length; i++) {
             System.out.print(this.field[i] + " ");
         }
@@ -209,9 +214,13 @@ class sorter {
                     swap(j,j+1);
                     m = j;
                 }
+                if(this.field[i] == this.field[j+1]) {
+                    div+=2;
+                }
             }
 
-            div += bubbleDiv(this.field);
+            div++;
+            //div += bubbleDiv(this.field);
             insertTrace(div);
         }
         System.out.println(12);
@@ -224,9 +233,13 @@ class sorter {
 
         System.out.println();
 
-        for (int i = this.field.length / 2 - 1; i >= 0; i--) {
-            siftDown(this.field, this.field.length, i);
+
+        if(this.field[0] < this.field[1]) {
+            int temp = this.field[0] ;
+            this.field[0] = this.field[1];
+            this.field[1] = temp;
         }
+
         int last = this.field.length - 1;
 
         while (last > 0) {
@@ -240,19 +253,20 @@ class sorter {
     void siftDown(int[] field, int size, int i) {
         int max = i;
         int left = 2 * i + 1;
-        int right = 2 * i + 2;
+        int right = left + 1;
 
-        if (left < size && comparable(this.field, left, field[max])) {
-            max = left;
-        }
+        while(left <= field.length) {
+            if (left < size && comparable(this.field, left, field[max])) {
+                max = left;
+            }
 
-        if (right < size && comparable(this.field, right, field[max])) {
-            max = right;
-        }
+            else if ((right < size && comparable(this.field, right, field[max]))) {
+                max = right;
+            }
 
-        if (max != i) {
-            swap(i, max);
-            siftDown(field, size, i);
+            this.swap(i, max);
+            i = left;
+            left = 2 * i + 1;
         }
     }
 
@@ -350,8 +364,35 @@ class sorter {
         return merged;
     }
 
-    void parition() {
+    int parition(int left, int right) {
+        int p = this.field[left];
+        int l = left;
+        int r = right + 1;
 
+        while (true) {
+            do {
+                l++;
+                this.compares++;
+            } while ((this.field[l] < p) && (l < right));
+            do {
+                r--;
+                this.compares++;
+            } while (this.field[r] > p);
+            if (l >= r) {
+                break;
+            }
+            swap(l, r);
+        }
+        swap(left, r);
+        return r;
+    }
+
+    void quicksort(int left, int right) {
+        if(left < right) {
+            int r = parition(left, right);
+            quicksort(left, r - 1);
+            quicksort(r + 1, right);
+        }
     }
 
     int bubbleDiv(int [] arr) {
