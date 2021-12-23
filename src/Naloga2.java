@@ -107,12 +107,22 @@ class sorter {
                 break;
 
             case "heap":
+                this.counting = "";
+
                 heapSort();
+
+                if(mode.equals("count")) {
+                    heapSort();
+                    this.dir *= -1;
+                    heapSort();
+                    this.counting = this.counting.substring(0, this.counting.length() - 2);
+                    System.out.println(this.counting);
+                }
+
                 break;
 
             case "quick":
                 quicksort(0, this.field.length - 1);
-                System.out.println(12);
                 break;
         }
     }
@@ -227,44 +237,54 @@ class sorter {
     }
 
     void heapSort() {
-        for (int i = 0; i < this.field.length; i++) {
-            System.out.print(this.field[i] + " ");
+        StringBuilder mid = new StringBuilder();
+        this.moves = 0;
+        this.compares = 0;
+
+        if(mode.equals("trace")) {
+            for (int k = 0; k < this.field.length; k++) {
+                System.out.print(this.field[k] + " ");
+            }
+            System.out.println();
         }
 
-        System.out.println();
-
-
-        if(this.field[0] < this.field[1]) {
-            int temp = this.field[0] ;
-            this.field[0] = this.field[1];
-            this.field[1] = temp;
+        for (int i = this.field.length / 2 - 1; i >= 0; --i) {
+            siftDown(this.field.length - 1, i);
         }
 
         int last = this.field.length - 1;
 
-        while (last > 0) {
-            insertTrace(last);
+        while (last >= 0) {
+            if(this.mode.equals("trace")) {
+                insertTrace(last);
+            }
             swap(0,last);
-            siftDown(this.field, last--, 0);
+            last--;
+            siftDown(last, 0);
         }
-        insertTrace(last);
+
+        if(mode.equals("count")) {
+            mid.append(this.moves + " ");
+            mid.append(this.compares + " ");
+            mid.append("| ");
+            this.counting += mid.toString();
+        }
+
     }
 
-    void siftDown(int[] field, int size, int i) {
-        int max = i;
+    void siftDown(int size, int i) {
         int left = 2 * i + 1;
-        int right = left + 1;
 
-        while(left <= field.length) {
-            if (left < size && comparable(this.field, left, field[max])) {
-                max = left;
+        while(left <= size) {
+            if (left + 1 <= size && comparable(this.field, left + 1, this.field[left])) {
+                left++;
             }
 
-            else if ((right < size && comparable(this.field, right, field[max]))) {
-                max = right;
+            if (comparable(this.field, i, this.field[left])) {
+                break;
             }
 
-            this.swap(i, max);
+            this.swap(i, left);
             i = left;
             left = 2 * i + 1;
         }
