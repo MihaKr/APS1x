@@ -1,12 +1,39 @@
 import java.util.Scanner;
 
 public class Naloga3 {
+    static class ArrayDeque<T> {
+        private T[] a;
+        private int front, back, size;
+
+        public ArrayDeque(int size) {
+            a = (T[]) (new Object[size]);
+            front = 0;
+            back = 0;
+            size = 0;
+        }
+
+        public T get(int i){
+            T vmesni = a[i];
+            return vmesni;
+        }
+
+        public void add(T x){
+            a[size] = x;
+            size++;
+        }
+    }
+
     static class graph {
         private int[][] matrix;
         public int size;
         public boolean type;
         public int[] paths;
         public int nodes;
+
+        public ArrayDeque<Integer> in = new ArrayDeque<Integer>(this.size);
+        public ArrayDeque<Integer> out = new ArrayDeque<Integer>(this.size);
+
+
 
         public graph(int size, boolean type) {
             this.size = size;
